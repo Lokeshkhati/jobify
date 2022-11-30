@@ -9,9 +9,9 @@ const Navbar = () => {
         <Wrapper>
             <Logo />
             <div className="user-container">
-                <h4>Hi , Lokesh</h4>
+                <p>Hi , {user}</p>
                 <button>
-                    Dark
+                    Da
                 </button>
             </div>
         </Wrapper>

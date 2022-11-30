@@ -2,6 +2,7 @@ import Landing from './pages/Landing'
 import { Routes, Route } from "react-router-dom"
 import { Error, Register } from "./pages"
 import { AddJob, AllJobs, Profile, SharedLayout, Stats } from './pages/Dashboard'
+import { Navbar } from './components'
 const App = () => {
   return (
     <Routes>

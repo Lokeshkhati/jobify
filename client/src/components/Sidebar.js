@@ -9,7 +9,6 @@ const Sidebar = () => {
                 <NavLinks />
                 <Logout />
             </main>
-
         </Wrapper>
     )
 }

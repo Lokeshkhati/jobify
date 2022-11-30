@@ -2,17 +2,11 @@
 import { Link } from "react-router-dom"
 import main from "../assets/images/main.svg"
 import Wrapper from "../assets/wrappers/LandingPage"
-import { Logo } from "../components"
+import {  Navbar } from "../components"
 const Landing = () => {
     return (
         <Wrapper>
-            <nav>
-                <Logo />
-                <div>
-                    <button>Dark</button>
-                </div>
-            </nav>
-
+           <Navbar/>
             <div className="container page">
                 <div className="info">
                     <h1>Job  <span>tracking</span> app </h1>

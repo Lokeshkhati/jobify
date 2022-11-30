@@ -2,7 +2,6 @@ import { createContext, useContext, useReducer } from 'react'
 import { CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN } from './actions'
 import reducer from './reducer'
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
 
 const token = localStorage.getItem('token')
 const user = localStorage.getItem('user')
