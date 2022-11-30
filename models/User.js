@@ -40,14 +40,15 @@ const UserSchema = new mongoose.Schema({
     }
 })
 
-UserSchema.pre('save', async () => {
-    // console.log(this.password)
-    const salt = await bcrypt.genSalt(12);
+UserSchema.pre('save', async function () {
+    console.log(this.password)
+    const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt)
 })
 
-UserSchema.methods.createJWT = () => {
-    // console.log(this)
+UserSchema.methods.createJWT = function () {
     return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRY })
 }
+
+
 export default mongoose.model('User', UserSchema)
