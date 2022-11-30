@@ -15,7 +15,7 @@ const initialState = {
 
 const Register = () => {
   const [values, setValues] = useState(initialState)
-  const { isLoading, showAlert, displayAlert, registerUser } = useApp()
+  const { user, isLoading, showAlert, displayAlert, registerUser, loginUser } = useApp()
   const navigate = useNavigate()
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember })
@@ -34,20 +34,20 @@ const Register = () => {
       return
     }
     const currentUser = { name, email, password }
+
     if (isMember) {
-      console.log("already a member")
+      loginUser(currentUser)
     }
     else {
       registerUser(currentUser)
     }
-    console.log(values)
-
   }
+
   useEffect(() => {
     if (user) {
       setTimeout(() => {
         navigate('/')
-      },3000)
+      }, 3000)
     }
   }, [user, navigate])
 
