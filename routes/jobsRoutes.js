@@ -7,6 +7,6 @@ router.route('/').post(createJob)
 router.route('/').get(getAllJobs)
 router.route('/stats').get(showStats)
 router.route('/:id').put(updateJob)
-router.route('/:id').delete(updateJob)
+router.route('/:id').delete(deleteJob)
 
 export default router
