@@ -1,4 +1,4 @@
-import { CLEAR_ALERT, DISPLAY_ALERT, REGISTER_USER_BEGIN, REGISTER_USER_ERROR, REGISTER_USER_SUCCESS, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR } from "./actions"
+import { CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN } from "./actions"
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -16,12 +16,12 @@ const reducer = (state, action) => {
                 alertType: "",
                 alertText: ""
             }
-        case REGISTER_USER_BEGIN:
+        case SETUP_USER_BEGIN:
             return {
                 ...state,
                 isLoading: true
             }
-        case REGISTER_USER_SUCCESS:
+        case SETUP_USER_SUCCESS:
             return {
                 ...state,
                 user: action.payload.user,
@@ -31,10 +31,10 @@ const reducer = (state, action) => {
                 isLoading: false,
                 showAlert: true,
                 alertType: "success",
-                alertText: "User Created! Redirecting..."
-
+                alertText: action.payload.alertText
             }
-        case REGISTER_USER_ERROR:
+
+        case SETUP_USER_ERROR:
             return {
                 ...state,
                 isLoading: false,
@@ -43,24 +43,6 @@ const reducer = (state, action) => {
                 alertText: action.payload.msg
 
             }
-            case LOGIN_USER_BEGIN:
-            return {
-                ...state,
-                isLoading: true
-            }
-            case LOGIN_USER_SUCCESS:
-            return {
-                ...state,
-                user: action.payload.user,
-                token: action.payload.token,
-                userLocation: action.payload.location,
-                jobLocation: action.payload.location,
-                isLoading: false,
-                showAlert: true,
-                alertType: "success",
-                alertText: "User Login Successful! Redirecting..."
-            }
-
     }
 
     throw new Error(`no such action : ${action.type}`)

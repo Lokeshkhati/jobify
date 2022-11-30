@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from 'react'
-import { CLEAR_ALERT, DISPLAY_ALERT, REGISTER_USER_BEGIN, REGISTER_USER_ERROR, REGISTER_USER_SUCCESS, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR } from './actions'
+import { CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN } from './actions'
 import reducer from './reducer'
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
@@ -44,51 +44,30 @@ const AppProvider = ({ children }) => {
         localStorage.removeItem("token")
         localStorage.removeItem("location")
     }
-    const registerUser = async (currentUser) => {
-        dispatch({ type: REGISTER_USER_BEGIN })
+
+    const setupUser = async ({ currentUser, endPoint, alertText }) => {
+        dispatch({ type: SETUP_USER_BEGIN })
         try {
-            const { data } = await axios.post('http://localhost:4000/api/v1/auth/register', currentUser, {
+            const { data } = await axios.post(`http://localhost:4000/api/v1/auth/${endPoint}`, currentUser, {
                 headers: {
                     "Content-Type": "application/json",
                 }
             })
             const { user, token, location } = data
-            dispatch({
-                type: REGISTER_USER_SUCCESS, payload: {
-                    user, token, location
-                }
-            })
-            addToLocalStorage({ user, token, location })
-        } catch (error) {
-            dispatch({ type: REGISTER_USER_ERROR, payload: { msg: error.data.msg } })
-        }
-        clearAlert()
-    }
-
-    const loginUser = async (currentUser) => {
-        dispatch({ type: LOGIN_USER_BEGIN })
-        try {
-            const { data } = await axios.post('http://localhost:4000/api/v1/auth/login', currentUser, {
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            })
-            const { user, token, location } = data
-            dispatch({ type: LOGIN_USER_SUCCESS, payload: { user, token, location } })
+            dispatch({ type: SETUP_USER_SUCCESS, payload: { user, token, location, alertText } })
 
             addToLocalStorage({ user, token, location })
         } catch (error) {
             dispatch({
-                type: LOGIN_USER_ERROR,
+                type: SETUP_USER_ERROR,
                 payload: { msg: error.data.msg }
             })
         }
         clearAlert()
     }
 
-
     return (
-        <AppContext.Provider value={{ ...state, displayAlert, clearAlert, registerUser, loginUser }}>
+        <AppContext.Provider value={{ ...state, displayAlert, clearAlert, setupUser }}>
             {children}
         </AppContext.Provider>
     )
