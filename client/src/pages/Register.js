@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import Wrapper from "../assets/wrappers/RegisterPage"
 import { Logo } from "../components"
 import Alert from "../components/Alert"
@@ -14,9 +15,8 @@ const initialState = {
 
 const Register = () => {
   const [values, setValues] = useState(initialState)
-  // global state and useNavigate
-  const { isLoading, showAlert, displayAlert } = useApp()
-
+  const { isLoading, showAlert, displayAlert, registerUser } = useApp()
+  const navigate = useNavigate()
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember })
   }
@@ -25,6 +25,7 @@ const Register = () => {
     const { name, value } = event.target
     setValues({ ...values, [name]: value })
   }
+
   const onSubmit = (event) => {
     event.preventDefault()
     const { name, email, password, isMember } = values
@@ -32,12 +33,26 @@ const Register = () => {
       displayAlert()
       return
     }
+    const currentUser = { name, email, password }
+    if (isMember) {
+      console.log("already a member")
+    }
+    else {
+      registerUser(currentUser)
+    }
     console.log(values)
+
   }
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate('/')
+      },3000)
+    }
+  }, [user, navigate])
 
   return (
     <Wrapper className="full-page">
-
       <form className="form" onSubmit={onSubmit}>
         <Logo />
         <h3>{values.isMember ? "Login" : "Register"}</h3>
@@ -53,11 +68,11 @@ const Register = () => {
           handleChange={handleChange}
         />
 
-        <button type="submit" className="btn btn-block"> {values.isMember ? "Login" : "Register"}</button>
+        <button type="submit" className="btn btn-block" disabled={isLoading}> {values.isMember ? "Login" : "Register"}</button>
         <p>
           {values.isMember ? "Not a member yet ?" : "Already a member ?"}
 
-          <button type="button" className="member-btn" onClick={toggleMember}>
+          <button type="button" className="member-btn" onClick={toggleMember} >
 
             {values.isMember ? "Register" : "Login"}
           </button>
