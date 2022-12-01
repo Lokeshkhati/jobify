@@ -7,5 +7,6 @@ import Sidebar from "./Sidebar"
 import MobileNav from "./MobileNav"
 import Logout from "./Logout"
 import NavLinks from "./NavLinks"
+import FormRowSelect from "./FormRowSelect"
 
-export { Logo, Alert, FormRow, RequiresAuth, Navbar, Sidebar, MobileNav, Logout, NavLinks }
+export { Logo, Alert, FormRow, RequiresAuth, Navbar, Sidebar, MobileNav, Logout, NavLinks, FormRowSelect }

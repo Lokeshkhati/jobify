@@ -5,6 +5,7 @@ import Logo from "./Logo";
 
 const Navbar = () => {
     const { user } = useApp()
+    console.log(user?.name)
     return (
         <Wrapper>
             <Logo />
