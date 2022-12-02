@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from 'react'
-import { CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR } from './actions'
+import { CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, DELETE_JOB_BEGIN, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR } from './actions'
 import reducer from './reducer'
 import axios from "axios"
 
@@ -22,7 +22,13 @@ const initialState = {
     jobTypeOptions: ["full-time", 'part-time', "remote", "internship"],
     jobType: 'full-time',
     statusOptions: ["pending", 'interview', "declined"],
-    status: 'pending'
+    status: 'pending',
+    jobs: [],
+    totalJobs: 0,
+    numOfPages: 1,
+    page: 1,
+    stats: {},
+    monthlyApplications: []
 }
 
 const AppContext = createContext()
@@ -36,7 +42,6 @@ const AppProvider = ({ children }) => {
     const authFetch = axios.create({
         baseURL: 'http://localhost:4000/api/v1',
     })
-
     authFetch.interceptors.request.use((config) => {
         config.headers['Authorization'] = `Bearer ${state.token}`
         return config
@@ -92,12 +97,10 @@ const AppProvider = ({ children }) => {
         }
         clearAlert()
     }
-
     const logoutUser = () => {
         dispatch({ type: LOGOUT_USER })
         removeFromLocalStorage()
     }
-
     const updateUser = async (currentUser) => {
         dispatch({ type: UPDATE_USER_BEGIN })
         try {
@@ -134,7 +137,6 @@ const AppProvider = ({ children }) => {
             await authFetch.post('/jobs', {
                 position, company, jobLocation, jobType, status
             })
-
             dispatch({ type: CREATE_JOB_SUCCESS })
             dispatch({ type: CLEAR_VALUES })
         } catch (error) {
@@ -147,15 +149,85 @@ const AppProvider = ({ children }) => {
         }
         clearAlert()
     }
-    const editJob = () => {
+    const getJobs = async () => {
+        let url = `/jobs`
+        dispatch({ type: GET_JOBS_BEGIN })
+        try {
+            const { data } = await authFetch(url)
+            const { jobs, totalJobs, numOfPages } = data
+            dispatch({
+                type: GET_JOBS_SUCCESS, payload: {
+                    jobs,
+                    totalJobs,
+                    numOfPages
+                }
+            })
+        } catch (error) {
+            console.log(error.response);
+            logoutUser()
+        }
+        clearAlert()
+    }
+    const setEditJob = (id) => {
 
     }
+    const deleteJob = async (jobId) => {
+        dispatch({ type: DELETE_JOB_BEGIN });
+        try {
+            await authFetch.delete(`/jobs/${jobId}`);
+            getJobs();
+        } catch (error) {
+            logoutUser();
+        }
+    }
+    const editJob = async () => {
+        dispatch({ type: EDIT_JOB_BEGIN });
+
+        try {
+            const { position, company, jobLocation, jobType, status } = state
+
+            await authFetch.put(`/jobs/${state.editJob}`, { position, company, jobLocation, jobType, status })
+
+            dispatch({
+                type: EDIT_JOB_SUCCESS,
+            });
+            dispatch({ type: CLEAR_VALUES });
+        } catch (error) {
+            if (error.response.status === 401) return
+            dispatch({
+                type: EDIT_JOB_ERROR,
+                payload: {
+                    msg: error.response.data.msg
+                }
+            })
+
+        }
+        clearAlert()
+    }
+    const showStats = async () => {
+        dispatch({ type: SHOW_STATS_BEGIN })
+        try {
+            const { data } = await authFetch('/jobs/stats')
+            dispatch({
+                type: SHOW_STATS_SUCCESS,
+                payload: {
+                    stats: data.defaultStats,
+                    monthlyApplications: data.monthlyApplications,
+                },
+            })
+        } catch (error) {
+            console.log(error.response)
+            logoutUser()
+        }
+
+        clearAlert()
+    }
+
 
     return (
-        <AppContext.Provider value={{ ...state, displayAlert, clearAlert, setupUser, logoutUser, updateUser, handleChange, clearValues, createJob, editJob }}>
+        <AppContext.Provider value={{ ...state, displayAlert, clearAlert, setupUser, logoutUser, updateUser, handleChange, clearValues, createJob, editJob, getJobs, setEditJob, deleteJob, showStats }}>
             {children}
         </AppContext.Provider>
     )
 }
-
 export { AppProvider, useApp }

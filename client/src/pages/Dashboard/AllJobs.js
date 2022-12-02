@@ -1,41 +1,10 @@
+import { FilterJobs, JobsList } from "../../components"
+
 const AllJobs = () => {
   return (
-    <div>
-
-      <h4>
-        AllJobs
-      </h4>
-      <h4>
-        AllJobs
-      </h4>
-      <h4>
-        AllJobs
-      </h4>
-      <h4>
-        AllJobs
-      </h4>
-      <h4>
-        AllJobs
-      </h4>
-      <h4>
-        AllJobs
-      </h4>
-      <h4>
-        AllJobs
-      </h4>
-      <h4>
-        AllJobs
-      </h4>
-      <h4>
-        AllJobs
-      </h4>
-      <h4>
-        AllJobs
-      </h4>
-      <h4>
-        AllJobs
-      </h4>
-    </div>
-  )
+    <>
+      <FilterJobs />
+      <JobsList />
+    </>)
 }
 export default AllJobs
