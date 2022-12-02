@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from 'react'
-import { CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR } from './actions'
+import { CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR } from './actions'
 import reducer from './reducer'
 import axios from "axios"
 
@@ -36,13 +36,13 @@ const AppProvider = ({ children }) => {
     const authFetch = axios.create({
         baseURL: 'http://localhost:4000/api/v1',
     })
+
     authFetch.interceptors.request.use((config) => {
         config.headers['Authorization'] = `Bearer ${state.token}`
         return config
     }, (error) => {
         return Promise.reject(error)
     })
-
     authFetch.interceptors.response.use((response) => {
         return response
     }, (error) => {
@@ -79,7 +79,8 @@ const AppProvider = ({ children }) => {
                     "Content-Type": "application/json",
                 }
             })
-            const { user, token, location } = data
+            const { token, location } = data
+            console.log(user)
             dispatch({ type: SETUP_USER_SUCCESS, payload: { user, token, location, alertText } })
 
             addToLocalStorage({ user, token, location })
@@ -120,8 +121,38 @@ const AppProvider = ({ children }) => {
         }
         clearAlert()
     }
+    const handleChange = ({ name, value }) => {
+        dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
+    };
+    const clearValues = () => {
+        dispatch({ type: CLEAR_VALUES });
+    };
+    const createJob = async () => {
+        dispatch({ type: CREATE_JOB_BEGIN })
+        try {
+            const { position, company, jobLocation, jobType, status } = state
+            await authFetch.post('/jobs', {
+                position, company, jobLocation, jobType, status
+            })
+
+            dispatch({ type: CREATE_JOB_SUCCESS })
+            dispatch({ type: CLEAR_VALUES })
+        } catch (error) {
+            if (error.response.status === 401) return
+            dispatch({
+                type: CREATE_JOB_ERROR, payload: {
+                    msg: error.response.data.msg
+                }
+            })
+        }
+        clearAlert()
+    }
+    const editJob = () => {
+
+    }
+
     return (
-        <AppContext.Provider value={{ ...state, displayAlert, clearAlert, setupUser, logoutUser, updateUser, }}>
+        <AppContext.Provider value={{ ...state, displayAlert, clearAlert, setupUser, logoutUser, updateUser, handleChange, clearValues, createJob, editJob }}>
             {children}
         </AppContext.Provider>
     )

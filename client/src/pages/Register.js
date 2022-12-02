@@ -44,7 +44,6 @@ const Register = () => {
       setupUser({ currentUser, endPoint: "register", alertText: "User Created! Redirecting..." })
     }
   }
-
   useEffect(() => {
     if (user) {
       setTimeout(() => {

@@ -2,7 +2,7 @@ import { FormRow, FormRowSelect, Alert } from "../../components"
 import { useApp } from "../../contexts/app-context"
 import Wrapper from "../../assets/wrappers/DashboardFormPage"
 const AddJob = () => {
-  const { showAlert, displayAlert, position, company, jobLocation, jobType, jobTypeOptions, status, statusOptions, isEditing } = useApp()
+  const { isLoading, showAlert, displayAlert, position, company, jobLocation, jobType, jobTypeOptions, status, statusOptions, isEditing, handleChange, clearValues, createJob, editJob } = useApp()
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -10,12 +10,16 @@ const AddJob = () => {
       displayAlert()
       return
     }
-    console.log('create job')
+    if (isEditing) {
+      editJob()
+      return
+    }
+    createJob()
   }
 
   const handleJobInput = (event) => {
     const { name, value } = event.target
-    console.log(`${name} : ${value}`)
+    handleChange({ name, value })
   }
   return (
     <Wrapper>
@@ -43,14 +47,18 @@ const AddJob = () => {
           />
           <FormRowSelect
             name='jobType'
-            labelText='job type'
+            labelText='job type' 
             value={jobType}
             handleChange={handleJobInput}
             list={jobTypeOptions}
           />
 
           <div className="btn-container">
-            <button className="btn btn-block submit-btn">Submit</button>
+            <button className="btn btn-block submit-btn" disabled={isLoading}>Submit</button>
+            <button className="btn btn-block clear-btn" onClick={(e) => {
+              e.preventDefault()
+              clearValues()
+            }}>clear</button>
           </div>
 
         </div>
