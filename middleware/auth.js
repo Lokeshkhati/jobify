@@ -1,18 +1,18 @@
 import jwt from "jsonwebtoken";
-import { UnauthenticatedError } from "../errors/index.js";
+import { UnAuthenticatedError } from "../errors/index.js";
 
 const isLoggedIn = async (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1]
+    const token = req.cookies.token;
 
     if (!token) {
-        throw new UnauthenticatedError("Unauthorized")
+        throw new UnAuthenticatedError("Unauthorized")
     }
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = { userId: decoded.userId }
         next();
     } catch (error) {
-        throw new UnauthenticatedError("Unauthorized")
+        throw new UnAuthenticatedError("Unauthorized")
     }
 }
 

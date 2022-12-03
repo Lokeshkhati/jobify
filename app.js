@@ -1,7 +1,7 @@
 import express from 'express';
 const app = express()
-import { config } from "dotenv"
-config()
+import dotenv from "dotenv"
+dotenv.config()
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -13,7 +13,6 @@ import jobsRouter from "./routes/jobsRoutes.js"
 
 import notFoundMiddleware from "./middleware/not-found.js"
 import errorHandlerMiddleware from "./middleware/error-handler.js"
-
 import isLoggedIn from "./middleware/auth.js"
 
 if (process.env.NODE_ENV !== 'production') {
