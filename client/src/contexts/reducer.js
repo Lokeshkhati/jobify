@@ -1,4 +1,8 @@
-import { CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, DELETE_JOB_BEGIN } from "./actions"
+import {
+    CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN, LOGOUT_USER,
+    UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, DELETE_JOB_BEGIN, DELETE_JOB_ERROR, GET_CURRENT_USER_BEGIN, GET_CURRENT_USER_SUCCESS, CLEAR_FILTERS, CHANGE_PAGE
+} from "./actions"
+import { initialState } from "./app-context"
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -25,7 +29,6 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 user: action.payload.user,
-                token: action.payload.token,
                 userLocation: action.payload.location,
                 jobLocation: action.payload.location,
                 isLoading: false,
@@ -51,7 +54,6 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 user: action.payload.user,
-                token: action.payload.token,
                 userLocation: action.payload.location,
                 jobLocation: action.payload.location,
                 isLoading: false,
@@ -70,15 +72,29 @@ const reducer = (state, action) => {
             }
         case LOGOUT_USER:
             return {
-
+                ...initialState,
+                userLoading: false,
             }
+
         case HANDLE_CHANGE:
             return {
                 ...state,
+                page: 1,
                 [action.payload.name]: action.payload.value
             }
         case CLEAR_VALUES:
-            const initialState = {
+            // const initialState = {
+            //     isEditing: false,
+            //     editJobId: '',
+            //     position: '',
+            //     company: '',
+            //     jobLocation: state.userLocation,
+            //     jobType: 'full-time',
+            //     status: 'pending',
+            // }
+            return {
+                ...state,
+                // ...initialState,
                 isEditing: false,
                 editJobId: '',
                 position: '',
@@ -86,10 +102,6 @@ const reducer = (state, action) => {
                 jobLocation: state.userLocation,
                 jobType: 'full-time',
                 status: 'pending',
-            }
-            return {
-                ...state,
-                ...initialState
             }
         case CREATE_JOB_BEGIN:
             return {
@@ -126,7 +138,6 @@ const reducer = (state, action) => {
                 jobs: action.payload.totalJobs,
                 totalJobs: action.payload.totalJobs,
                 numOfPages: action.payload.numOfPages
-
             }
         case SET_EDIT_JOB:
             const job = state.jobs.find((job) => job._id === action.payload.id);
@@ -142,8 +153,18 @@ const reducer = (state, action) => {
                 status,
             }
         case DELETE_JOB_BEGIN:
-            return { ...state, isLoading: true };
-
+            return {
+                ...state,
+                isLoading: true
+            };
+        case DELETE_JOB_ERROR:
+            return {
+                ...state,
+                isLoading: false,
+                showAlert: true,
+                alertType: 'danger',
+                alertText: action.payload.msg,
+            };
         case EDIT_JOB_BEGIN:
             return {
                 ...state,
@@ -165,10 +186,36 @@ const reducer = (state, action) => {
                 alertType: 'danger',
                 alertText: action.payload.msg,
             };
+
+        case CLEAR_FILTERS:
+            return {
+                ...state,
+                search: '',
+                searchStatus: 'all',
+                searchType: 'all',
+                sort: 'latest',
+            }
+        case CHANGE_PAGE:
+            return {
+                ...state,
+                page: action.payload.page
+            }
+        case GET_CURRENT_USER_BEGIN:
+            return { ...state, userLoading: true, showAlert: false };
+        case GET_CURRENT_USER_SUCCESS:
+            return {
+                ...state,
+                userLoading: false,
+                user: action.payload.user,
+                userLocation: action.payload.location,
+                jobLocation: action.payload.location,
+            };
+
     }
 
     throw new Error(`no such action : ${action.type}`)
 }
 
 export default reducer
+
 

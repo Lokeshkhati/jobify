@@ -9,12 +9,13 @@ import Logout from "./Logout"
 import NavLinks from "./NavLinks"
 import FormRowSelect from "./FormRowSelect"
 import JobsList from "./JobsList"
-import FilterJobs from "./FilterJobs"
+import SearchContainer from "./SearchContainer"
 import Loading from "./Loading"
 import StatsList from "./StatsList"
 import StatItem from "./StatItem"
 import Charts from "./Charts"
-import BarChart from "./BarChart"
-import AreaChart from "./AreaChart"
+import BarChartComponent from "./BarChart"
+import AreaChartComponent from "./AreaChart"
+import PageButtons from "./PageButtons"
 
-export { Logo, Alert, FormRow, RequiresAuth, Navbar, Sidebar, MobileNav, Logout, NavLinks, FormRowSelect, JobsList, FilterJobs, Loading, StatsList, StatItem, Charts, AreaChart, BarChart }
+export { Logo, Alert, FormRow, RequiresAuth, Navbar, Sidebar, MobileNav, Logout, NavLinks, FormRowSelect, JobsList, SearchContainer, Loading, StatsList, StatItem, Charts, AreaChartComponent, BarChartComponent, PageButtons }

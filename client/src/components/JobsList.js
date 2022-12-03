@@ -3,12 +3,13 @@ import Loading from './Loading';
 import Job from './Job';
 import Wrapper from '../assets/wrappers/JobsList';
 import { useApp } from '../contexts/app-context';
+import PageButtons from './PageButtons';
 
 const JobsList = () => {
-    const { getJobs, jobs, isLoading, page, totalJobs } = useApp();
+    const { getJobs, jobs, isLoading, page, totalJobs, search, searchStatus, searchType, sort, numOfPages } = useApp();
     useEffect(() => {
         getJobs();
-    }, []);
+    }, [page, search, searchStatus, searchType, sort]);
 
     if (isLoading) {
         return <Loading center />;
@@ -30,6 +31,7 @@ const JobsList = () => {
                     return <Job key={job._id} {...job} />;
                 })}
             </div>
+            {numOfPages > 1 && <PageButtons />}
         </Wrapper>
     );
 };

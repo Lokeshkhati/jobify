@@ -1,19 +1,17 @@
-import { createContext, useContext, useReducer } from 'react'
-import { CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, DELETE_JOB_BEGIN, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR } from './actions'
+import { createContext, useContext, useEffect, useReducer } from 'react'
+import { CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, DELETE_JOB_BEGIN, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS, CLEAR_FILTERS, SET_EDIT_JOB, CHANGE_PAGE, DELETE_JOB_ERROR, GET_CURRENT_USER_BEGIN, GET_CURRENT_USER_SUCCESS } from './actions'
 import reducer from './reducer'
 import axios from "axios"
 
-const token = localStorage.getItem('token')
-const user = localStorage.getItem('user')
-const userLocation = localStorage.getItem('location')
 const initialState = {
+    userLoading: true,
     isLoading: false,
     showAlert: false,
     alertText: "",
     alertType: "",
-    user: user ? JSON.parse(user) : null,
-    token: token || '',
-    userLocation: userLocation || "",
+    user: null,
+    token: '',
+    userLocation: "",
     jobLocation: '',
     isEditing: false,
     editJobId: "",
@@ -28,7 +26,12 @@ const initialState = {
     numOfPages: 1,
     page: 1,
     stats: {},
-    monthlyApplications: []
+    monthlyApplications: [],
+    search: '',
+    searchStatus: 'all',
+    searchType: 'all',
+    sort: 'latest',
+    sortOptions: ['latest', 'oldest', 'a-z', 'z-a'],
 }
 
 const AppContext = createContext()
@@ -42,12 +45,7 @@ const AppProvider = ({ children }) => {
     const authFetch = axios.create({
         baseURL: 'http://localhost:4000/api/v1',
     })
-    authFetch.interceptors.request.use((config) => {
-        config.headers['Authorization'] = `Bearer ${state.token}`
-        return config
-    }, (error) => {
-        return Promise.reject(error)
-    })
+
     authFetch.interceptors.response.use((response) => {
         return response
     }, (error) => {
@@ -66,16 +64,7 @@ const AppProvider = ({ children }) => {
             dispatch({ type: CLEAR_ALERT })
         }, 3000)
     }
-    const addToLocalStorage = ({ user, token, location }) => {
-        localStorage.setItem("user", JSON.stringify(user))
-        localStorage.setItem("token", token)
-        localStorage.setItem("location", location)
-    }
-    const removeFromLocalStorage = () => {
-        localStorage.removeItem("user")
-        localStorage.removeItem("token")
-        localStorage.removeItem("location")
-    }
+
     const setupUser = async ({ currentUser, endPoint, alertText }) => {
         dispatch({ type: SETUP_USER_BEGIN })
         try {
@@ -84,35 +73,33 @@ const AppProvider = ({ children }) => {
                     "Content-Type": "application/json",
                 }
             })
-            const { token, location } = data
-            console.log(user)
-            dispatch({ type: SETUP_USER_SUCCESS, payload: { user, token, location, alertText } })
 
-            addToLocalStorage({ user, token, location })
+            const { user, location } = data
+            dispatch({ type: SETUP_USER_SUCCESS, payload: { user, location, alertText } })
+
         } catch (error) {
             dispatch({
                 type: SETUP_USER_ERROR,
-                payload: { msg: error.response.data.msg }
+                payload: { msg: error.response?.data.msg }
             })
         }
         clearAlert()
     }
-    const logoutUser = () => {
+    const logoutUser = async () => {
+        await authFetch.get('/auth/logout');
         dispatch({ type: LOGOUT_USER })
-        removeFromLocalStorage()
     }
     const updateUser = async (currentUser) => {
         dispatch({ type: UPDATE_USER_BEGIN })
         try {
             const { data } = await authFetch.put('/auth/updateUser', currentUser)
 
-            const { user, location, token } = data
+            const { user, location, } = data
             dispatch({
                 type: UPDATE_USER_SUCCESS, payload: {
-                    user, location, token
+                    user, location,
                 }
             })
-            addToLocalStorage({ user, token, location })
         } catch (error) {
             if (error.response.status !== 401) {
                 dispatch({
@@ -135,14 +122,19 @@ const AppProvider = ({ children }) => {
         try {
             const { position, company, jobLocation, jobType, status } = state
             await authFetch.post('/jobs', {
-                position, company, jobLocation, jobType, status
+                position,
+                company,
+                jobLocation,
+                jobType,
+                status
             })
             dispatch({ type: CREATE_JOB_SUCCESS })
             dispatch({ type: CLEAR_VALUES })
         } catch (error) {
             if (error.response.status === 401) return
             dispatch({
-                type: CREATE_JOB_ERROR, payload: {
+                type: CREATE_JOB_ERROR,
+                payload: {
                     msg: error.response.data.msg
                 }
             })
@@ -150,7 +142,13 @@ const AppProvider = ({ children }) => {
         clearAlert()
     }
     const getJobs = async () => {
-        let url = `/jobs`
+        const { page, search, searchStatus, searchType, sort } = state
+        let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+
+        if (search) {
+            url = url + `&search=${search}`
+        }
+
         dispatch({ type: GET_JOBS_BEGIN })
         try {
             const { data } = await authFetch(url)
@@ -163,13 +161,12 @@ const AppProvider = ({ children }) => {
                 }
             })
         } catch (error) {
-            console.log(error.response);
             logoutUser()
         }
         clearAlert()
     }
     const setEditJob = (id) => {
-
+        dispatch({ type: SET_EDIT_JOB, payload: { id } });
     }
     const deleteJob = async (jobId) => {
         dispatch({ type: DELETE_JOB_BEGIN });
@@ -177,7 +174,11 @@ const AppProvider = ({ children }) => {
             await authFetch.delete(`/jobs/${jobId}`);
             getJobs();
         } catch (error) {
-            logoutUser();
+            if (error.response.status === 401) return;
+            dispatch({
+                type: DELETE_JOB_ERROR,
+                payload: { msg: error.response.data.msg },
+            });
         }
     }
     const editJob = async () => {
@@ -185,12 +186,15 @@ const AppProvider = ({ children }) => {
 
         try {
             const { position, company, jobLocation, jobType, status } = state
+            await authFetch.put(`/jobs/${state.editJob}`, {
+                position,
+                company,
+                jobLocation,
+                jobType,
+                status
+            })
 
-            await authFetch.put(`/jobs/${state.editJob}`, { position, company, jobLocation, jobType, status })
-
-            dispatch({
-                type: EDIT_JOB_SUCCESS,
-            });
+            dispatch({ type: EDIT_JOB_SUCCESS });
             dispatch({ type: CLEAR_VALUES });
         } catch (error) {
             if (error.response.status === 401) return
@@ -216,18 +220,42 @@ const AppProvider = ({ children }) => {
                 },
             })
         } catch (error) {
-            console.log(error.response)
             logoutUser()
         }
 
         clearAlert()
     }
+    const clearFilters = () => {
+        dispatch({ type: CLEAR_FILTERS })
+    }
 
+    const changePage = (page) => {
+        dispatch({ type: CHANGE_PAGE, payload: { page } })
+    }
+    const getCurrentUser = async () => {
+        dispatch({ type: GET_CURRENT_USER_BEGIN });
+        try {
+            const { data } = await authFetch('/auth/getCurrentUser');
+            const { user, location } = data;
 
+            dispatch({
+                type: GET_CURRENT_USER_SUCCESS,
+                payload: { user, location },
+            });
+        } catch (error) {
+            if (error.response.status === 401) return;
+            logoutUser();
+        }
+    };
+    useEffect(() => {
+        getCurrentUser();
+    }, []);
     return (
-        <AppContext.Provider value={{ ...state, displayAlert, clearAlert, setupUser, logoutUser, updateUser, handleChange, clearValues, createJob, editJob, getJobs, setEditJob, deleteJob, showStats }}>
+        <AppContext.Provider value={{ ...state, displayAlert, clearAlert, setupUser, logoutUser, updateUser, handleChange, clearValues, createJob, editJob, getJobs, setEditJob, deleteJob, showStats, clearFilters, changePage }}>
             {children}
         </AppContext.Provider>
     )
 }
-export { AppProvider, useApp }
+export { AppProvider, initialState, useApp }
+
+

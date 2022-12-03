@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import BarChart from './BarChart';
+import BarChartComponent from './BarChart';
 import AreaChart from './AreaChart';
 import Wrapper from '../assets/wrappers/Charts';
+import { useApp } from '../contexts/app-context';
 
-export default function Charts() {
+const Charts = () => {
     const [isBarChart, setIsBarChart] = useState(true);
     const { monthlyApplications: data } = useApp();
 
@@ -14,7 +15,8 @@ export default function Charts() {
             <button type='button' onClick={() => setIsBarChart(!isBarChart)}>
                 {isBarChart ? 'AreaChart' : 'BarChart'}
             </button>
-            {isBarChart ? <BarChart data={data} /> : <AreaChart data={data} />}
+            {isBarChart ? <BarChartComponent data={data} /> : <AreaChart data={data} />}
         </Wrapper>
     );
-} 
+}
+export default Charts

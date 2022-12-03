@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/Job';
 import { useApp } from '../contexts/app-context';
 import JobInfo from './JobInfo';
+import moment from "moment"
 
 const Job = ({
     _id,
     position,
     company,
-    jobLocation,    
+    jobLocation,
     jobType,
     createdAt,
     status,

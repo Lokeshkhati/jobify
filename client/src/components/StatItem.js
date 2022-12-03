@@ -1,5 +1,3 @@
-StatItem.js;
-
 import Wrapper from '../assets/wrappers/StatItem';
 
 function StatItem({ count, title, icon, color, bgc }) {

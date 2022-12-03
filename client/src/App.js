@@ -2,11 +2,14 @@ import Landing from './pages/Landing'
 import { Routes, Route } from "react-router-dom"
 import { Error, Register } from "./pages"
 import { AddJob, AllJobs, Profile, SharedLayout, Stats } from './pages/Dashboard'
-import { Navbar } from './components'
+import { RequiresAuth } from './components'
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<SharedLayout />}>
+      <Route path="/" element={
+        <RequiresAuth>
+          <SharedLayout />
+        </RequiresAuth>}>
         <Route path="stats" element={<Stats />} />
         <Route path="all-jobs" element={<AllJobs />} />
         <Route path="add-job" element={<AddJob />} />
