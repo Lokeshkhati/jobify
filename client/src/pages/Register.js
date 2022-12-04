@@ -14,7 +14,7 @@ const initialState = {
 const Register = () => {
   const navigate = useNavigate()
   const [values, setValues] = useState(initialState)
-  const { user, isLoading, showAlert, displayAlert, setupUser } = useApp()
+  const { token, isLoading, showAlert, displayAlert, setupUser } = useApp()
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember })
@@ -36,8 +36,6 @@ const Register = () => {
 
     if (isMember) {
       setupUser({ currentUser, endPoint: "login", alertText: "Login Successful! Redirecting..." })
-      navigate('/');
-
     }
 
     else {
@@ -45,12 +43,12 @@ const Register = () => {
     }
   }
   useEffect(() => {
-    if (user) {
+    if (token) {
       setTimeout(() => {
         navigate('/');
       }, 3000);
     }
-  }, [user, navigate]);
+  }, [token, navigate]);
 
   return (
     <Wrapper className="full-page">

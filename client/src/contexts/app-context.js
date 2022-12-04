@@ -43,7 +43,7 @@ const AppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const authFetch = axios.create({
-        baseURL: 'http://localhost:4000/api/v1',
+        baseURL: 'api/v1',
     })
 
     authFetch.interceptors.response.use((response) => {
@@ -68,14 +68,13 @@ const AppProvider = ({ children }) => {
     const setupUser = async ({ currentUser, endPoint, alertText }) => {
         dispatch({ type: SETUP_USER_BEGIN })
         try {
-            const { data } = await axios.post(`http://localhost:4000/api/v1/auth/${endPoint}`, currentUser, {
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            })
+            const { data } = await axios.post(`api/v1/auth/${endPoint}`, currentUser)
+            console.log(data.token)
+            const { user, location, token } = data
+            // const { name, email, lastName, } = user
+            // const userData = { name, email, lastName }
 
-            const { user, location } = data
-            dispatch({ type: SETUP_USER_SUCCESS, payload: { user, location, alertText } })
+            dispatch({ type: SETUP_USER_SUCCESS, payload: { user, token, location, alertText } })
 
         } catch (error) {
             dispatch({
@@ -86,7 +85,7 @@ const AppProvider = ({ children }) => {
         clearAlert()
     }
     const logoutUser = async () => {
-        await authFetch.get('/auth/logout');
+        // await authFetch.get('/auth/logout');
         dispatch({ type: LOGOUT_USER })
     }
     const updateUser = async (currentUser) => {
@@ -237,7 +236,10 @@ const AppProvider = ({ children }) => {
         try {
             const { data } = await authFetch('/auth/getCurrentUser');
             const { user, location } = data;
+            // const { name, email, lastName, } = user
+            // const userData = { name, email, lastName }
 
+            console.log(user.name)
             dispatch({
                 type: GET_CURRENT_USER_SUCCESS,
                 payload: { user, location },

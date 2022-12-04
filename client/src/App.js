@@ -6,10 +6,8 @@ import { RequiresAuth } from './components'
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={
-        <RequiresAuth>
-          <SharedLayout />
-        </RequiresAuth>}>
+      <Route path="/" element={<SharedLayout />
+      }>
         <Route path="stats" element={<Stats />} />
         <Route path="all-jobs" element={<AllJobs />} />
         <Route path="add-job" element={<AddJob />} />

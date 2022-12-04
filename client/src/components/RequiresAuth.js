@@ -9,7 +9,7 @@ function RequiresAuth({ children }) {
     // if (userLoading) return <Loading />
 
     return user ? (
-        children
+        <> {children}</>
     ) : (
         <Navigate to="/landing" />
     );

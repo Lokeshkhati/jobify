@@ -10,7 +10,7 @@ const Navbar = () => {
         <Wrapper>
             <Logo />
             <div className="user-container">
-                <p>Hi , {user}</p>
+                <p>Hi , {user?.name}</p>
                 <button>
                     Da
                 </button>
