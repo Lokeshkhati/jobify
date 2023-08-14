@@ -8,7 +8,7 @@ import {
     Tooltip,
 } from 'recharts';
 
-const AreaChartComponent = ({data}) => {
+const AreaChartComponent = ({ data }) => {
     return (
         <ResponsiveContainer width='100%' height={300}>
             <AreaChart
