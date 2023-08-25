@@ -78,7 +78,6 @@ const updateJob = async (req, res) => {
         new: true,
         runValidators: true
     })
-
     res.status(StatusCodes.OK).json({ updatedJob })
 
 }
@@ -142,7 +141,6 @@ const showStats = async (req, res) => {
 
     res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
 };
-
 export { createJob, deleteJob, getAllJobs, updateJob, showStats }
 
 

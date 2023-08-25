@@ -50,7 +50,7 @@ UserSchema.methods.createJWT = function () {
     return jwt.sign({ userId: this?._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRY })
 }
 
-UserSchema.methods.isValidatedPassword = async function (usersendPassword) {
+UserSchema?.methods.isValidatedPassword = async function (usersendPassword) {
     return await bcrypt.compare(usersendPassword, this.password)
 }
 
