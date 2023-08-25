@@ -8,8 +8,9 @@ const App = () => {
     <Routes>
       <Route path="/" element={<RequiresAuth><SharedLayout /></RequiresAuth>
       }>
+
+        <Route path="" element={<AllJobs />} />
         <Route path="stats" element={<Stats />} />
-        <Route path="all-jobs" element={<AllJobs />} />
         <Route path="add-job" element={<AddJob />} />
         <Route path="profile" element={<Profile />} />
       </Route>

@@ -237,10 +237,7 @@ const AppProvider = ({ children }) => {
         try {
             const { data } = await authFetch('/auth/getCurrentUser');
             const { user, location } = data;
-            // const { name, email, lastName, } = user
-            // const userData = { name, email, lastName }
 
-            console.log(user.name)
             dispatch({
                 type: GET_CURRENT_USER_SUCCESS,
                 payload: { user, location },

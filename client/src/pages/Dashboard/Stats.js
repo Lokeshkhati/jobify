@@ -8,15 +8,13 @@ const Stats = () => {
 
   useEffect(() => {
     showStats()
+    console.log('lokesh++')
   }, [])
 
   if (isLoading) return <Loading center />
-
-
-  console.log(showStats, 'stats')
   return (
     <>
-      lokesh
+
       <StatsList />
       {monthlyApplications.length > 0 && <Charts />}
     </>
