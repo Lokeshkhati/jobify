@@ -7,7 +7,7 @@ const Sidebar = () => {
     return (
         <Wrapper>
             <main className="sidebar-container">
-                <Logo/>
+                <Logo />
                 <NavLinks />
                 <Logout />
             </main>

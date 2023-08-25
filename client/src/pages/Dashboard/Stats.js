@@ -12,8 +12,11 @@ const Stats = () => {
 
   isLoading && <Loading />
 
+
+  console.log(showStats, 'stats')
   return (
     <>
+      lokesh
       <StatsList />
       {monthlyApplications.length > 0 && <Charts />}
     </>

@@ -21,6 +21,7 @@ const Job = ({
 
     return (
         <Wrapper>
+
             <header>
                 <div className='main-icon'>{company.charAt(0)}</div>
                 <div className='info'>

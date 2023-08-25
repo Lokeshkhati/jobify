@@ -28,6 +28,7 @@ const StatsList = () => {
         },
     ];
 
+
     return (
         <Wrapper>
             {defaultStats.map((item, index) => {

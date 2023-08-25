@@ -3,6 +3,7 @@ import Wrapper from '../assets/wrappers/StatItem';
 function StatItem({ count, title, icon, color, bgc }) {
   return (
     <Wrapper color={color} bgc={bgc}>
+      lokesh
       <header>
         <span className='count'>{count}</span>
         <div className='icon'>{icon}</div>
