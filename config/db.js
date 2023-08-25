@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
-const connectWithDB = () => {
-    mongoose.connect(process.env.DB_URI, {
+const connectWithDB = (url) => {
+    mongoose.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })

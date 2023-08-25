@@ -15,16 +15,12 @@ import notFoundMiddleware from "./middleware/not-found.js"
 import errorHandlerMiddleware from "./middleware/error-handler.js"
 import isLoggedIn from "./middleware/auth.js"
 
-if (process.env.NODE_ENV !== 'production') {
-    app.use(morgan('dev'))
-}
+// if (process.env.NODE_ENV !== 'production') {
+//     app.use(morgan('dev'))
+// }
 
 app.use(express.json())
 app.use(cors())
-// app.use(cors({
-//     origin: ['http://localhost:3000'],
-//     credentials: true
-// }))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.json())
