@@ -4,7 +4,7 @@ import FormRow from "./FormRow";
 import RequiresAuth from "./RequiresAuth"
 import Navbar from "./Navbar"
 import Sidebar from "./Sidebar"
-import MobileNav from "./MobileNav"
+import SmallSidebar from "./SmallSidebar"
 import Logout from "./Logout"
 import NavLinks from "./NavLinks"
 import FormRowSelect from "./FormRowSelect"
@@ -18,4 +18,4 @@ import BarChartComponent from "./BarChart"
 import AreaChartComponent from "./AreaChart"
 import PageButtons from "./PageButtons"
 
-export { Logo, Alert, FormRow, RequiresAuth, Navbar, Sidebar, MobileNav, Logout, NavLinks, FormRowSelect, JobsList, SearchContainer, Loading, StatsList, StatItem, Charts, AreaChartComponent, BarChartComponent, PageButtons }
+export { Logo, Alert, FormRow, RequiresAuth, Navbar, Sidebar, SmallSidebar, Logout, NavLinks, FormRowSelect, JobsList, SearchContainer, Loading, StatsList, StatItem, Charts, AreaChartComponent, BarChartComponent, PageButtons }

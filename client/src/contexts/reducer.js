@@ -1,11 +1,16 @@
 import {
     CLEAR_ALERT, DISPLAY_ALERT, SETUP_USER_SUCCESS, SETUP_USER_ERROR, SETUP_USER_BEGIN, LOGOUT_USER,
-    UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, DELETE_JOB_BEGIN, DELETE_JOB_ERROR, GET_CURRENT_USER_BEGIN, GET_CURRENT_USER_SUCCESS, CLEAR_FILTERS, CHANGE_PAGE, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS
+    UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, DELETE_JOB_BEGIN, DELETE_JOB_ERROR, GET_CURRENT_USER_BEGIN, GET_CURRENT_USER_SUCCESS, CLEAR_FILTERS, CHANGE_PAGE, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS, TOGGLE_SIDEBAR
 } from "./actions"
 import { initialState } from "./app-context"
 
 const reducer = (state, action) => {
     switch (action.type) {
+        case TOGGLE_SIDEBAR:
+            return {
+                ...state,
+                showSidebar: !state.showSidebar
+            }
         case DISPLAY_ALERT:
             return {
                 ...state,
@@ -84,18 +89,8 @@ const reducer = (state, action) => {
                 [action.payload.name]: action.payload.value
             }
         case CLEAR_VALUES:
-            // const initialState = {
-            //     isEditing: false,
-            //     editJobId: '',
-            //     position: '',
-            //     company: '',
-            //     jobLocation: state.userLocation,
-            //     jobType: 'full-time',
-            //     status: 'pending',
-            // }
             return {
                 ...state,
-                // ...initialState,
                 isEditing: false,
                 editJobId: '',
                 position: '',

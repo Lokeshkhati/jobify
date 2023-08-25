@@ -10,7 +10,7 @@ const Wrapper = styled.aside`
       min-height: 100vh;
       height: 100%;
       width: 250px;
-      /* margin-left: -250px; */
+      margin-left: -250px;
       transition: var(--transition);
     }
     .content {
