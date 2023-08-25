@@ -6,7 +6,7 @@ function RequiresAuth({ children }) {
     const { user, userLoading } = useApp();
 
 
-    // if (userLoading) return <Loading />
+    if (userLoading) return <Loading />
 
     return user ? (
         <> {children}</>

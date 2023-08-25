@@ -2,7 +2,6 @@ import { readFile } from "fs/promises"
 import dotenv from "dotenv"
 dotenv.config()
 import connectWithDB from "./config/db.js"
-
 import Job from "./models/Job.js"
 
 const start = async () => {
@@ -16,7 +15,7 @@ const start = async () => {
         process.exit(0)
     } catch (error) {
         console.log(error)
-        process.exit(1 )
+        process.exit(1)
     }
 }
 

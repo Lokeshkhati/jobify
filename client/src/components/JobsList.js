@@ -11,9 +11,10 @@ const JobsList = () => {
         getJobs();
     }, [page, search, searchStatus, searchType, sort]);
 
-    if (isLoading) {
-        return <Loading center />;
-    }
+    console.log(jobs, 'from jobslist');
+
+    if (isLoading) return <Loading center />;
+
     if (jobs?.length === 0) {
         return (
             <Wrapper>
@@ -21,17 +22,19 @@ const JobsList = () => {
             </Wrapper>
         );
     }
+
     return (
         <Wrapper>
             <h5>
-                {totalJobs} job{jobs?.length > 1 && 's'} found
+                {totalJobs} job{jobs?.length > 1 && 's'} found lokesh
             </h5>
             <div className='jobs'>
-                {jobs && jobs.map((job) => {
+                {jobs?.length > 0 && jobs?.map((job) => {
                     return <Job key={job._id} {...job} />;
                 })}
             </div>
-            {numOfPages > 1 && <PageButtons />}
+            <PageButtons />
+            {/* {numOfPages > 1 && <PageButtons />} */}
         </Wrapper>
     );
 };

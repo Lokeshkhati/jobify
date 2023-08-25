@@ -1,18 +1,17 @@
 import Wrapper from "../assets/wrappers/Navbar"
-import { FaAlignLeft, FaUserCircle, FaCaretDown } from 'react-icons/fa';
 import { useApp } from "../contexts/app-context";
 import Logo from "./Logo";
 
 const Navbar = () => {
     const { user } = useApp()
-    console.log(user?.name)
     return (
         <Wrapper>
-            <Logo />
+            {/* <Logo /> */}
+            <div></div>
             <div className="user-container">
                 <p>Hi , {user?.name}</p>
                 <button>
-                    Da
+                    Logout
                 </button>
             </div>
         </Wrapper>
