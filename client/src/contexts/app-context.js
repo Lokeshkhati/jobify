@@ -89,7 +89,7 @@ const AppProvider = ({ children }) => {
         clearAlert()
     }
     const logoutUser = async () => {
-        // await authFetch.get('/auth/logout');
+        await authFetch.get('/auth/logout');
         dispatch({ type: LOGOUT_USER })
     }
     const updateUser = async (currentUser) => {

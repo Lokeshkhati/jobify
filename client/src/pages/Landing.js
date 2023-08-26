@@ -10,7 +10,6 @@ const Landing = () => {
         <>
             {user && <Navigate to='/' />}
             <Wrapper>
-                <Navbar />
                 <div className="container page">
                     <div className="info">
                         <h1>Job  <span>tracking</span> app </h1>
