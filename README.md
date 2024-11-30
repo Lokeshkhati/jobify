@@ -7,7 +7,7 @@
 - Advance features:  charts, pagination, and debounce-based searching.
 
 ## Live Demo
-View the live demo of the application here 👉 [JobiFy](https://lokesh-jobify.onrender.com/landing)
+View the live demo of the application here 👉 [JobiFy](https://jobify.live/)
 
 
 ## Application View!   
